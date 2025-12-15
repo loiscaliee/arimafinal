@@ -47,7 +47,7 @@ if model is not None and st.button("Prediksi Harga Besok"):
             lower_bound_raw = np.exp(conf_int_log.iloc[0])
             upper_bound_raw = np.exp(conf_int_log.iloc[1])
 
-            adjustment_bias = 149 
+            adjustment_bias = 249 
 
             pred_price = pred_price_raw + adjustment_bias
             lower_bound = lower_bound_raw + adjustment_bias
