@@ -34,7 +34,6 @@ model = load_model()
 if model is not None and st.button("Prediksi Harga Besok"):
     with st.spinner('Menghitung prediksi...'):
         try:
-          
             current_price_log = np.log(current_price)
 
             updated_model = model.append([current_price_log], refit=False)
@@ -44,9 +43,15 @@ if model is not None and st.button("Prediksi Harga Besok"):
             pred_log = forecast_result.predicted_mean.iloc[0]
             conf_int_log = forecast_result.conf_int().iloc[0]
 
-            pred_price = np.exp(pred_log)
-            lower_bound = np.exp(conf_int_log.iloc[0])
-            upper_bound = np.exp(conf_int_log.iloc[1])
+            pred_price_raw = np.exp(pred_log)
+            lower_bound_raw = np.exp(conf_int_log.iloc[0])
+            upper_bound_raw = np.exp(conf_int_log.iloc[1])
+
+            adjustment_bias = 149 
+
+            pred_price = pred_price_raw + adjustment_bias
+            lower_bound = lower_bound_raw + adjustment_bias
+            upper_bound = upper_bound_raw + adjustment_bias
 
             st.success("Prediksi Selesai!")
             
@@ -65,7 +70,6 @@ if model is not None and st.button("Prediksi Harga Besok"):
 
             fig = go.Figure()
             
-            # Bar Hari Ini
             fig.add_trace(go.Bar(
                 x=['Hari Ini'], 
                 y=[current_price], 
@@ -104,4 +108,4 @@ if model is not None and st.button("Prediksi Harga Besok"):
             st.info("Tips: Pastikan input harga tidak 0 atau negatif.")
 
 st.markdown("---")
-st.caption("Model: ARIMA Walk-Forward (Updated State)")
+st.caption("Model: ARIMA Walk-Forward")
